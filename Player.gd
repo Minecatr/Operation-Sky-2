@@ -34,6 +34,8 @@ var inventory : Array[Item]
 var inventory_slots = 5
 @export var selected_item = -1
 
+@onready var DEBUG_BUILD = OS.is_debug_build()
+
 @rpc("authority", "call_local")
 func inventory_append(item):
 	item = item if item is Item else Item.deserialize(item)
@@ -104,6 +106,10 @@ func _process(_delta):
 	if multiplayer.is_server():
 		if position.y < -50:
 			change_health.rpc(-1)
+		if DEBUG_BUILD and Input.is_action_pressed('cheat'):
+			for stat in stats:
+				stats[stat] += 100
+			get_tree().root.get_child(5).update_stats(stats)
 
 @rpc("authority","call_local")
 func change_health(amount):

@@ -173,7 +173,18 @@ func update_upgrades(upgrade_value_server,upgrade_cost_server,upgrade_type_serve
 func update_stats(stats):
 	for stat in stats_ui.get_children():
 		stat.get_node("Amount").text = str(stats[stat.name])
-		quick_ui
+	for stat in quick_ui.get_children():
+		if stat.name == 'HealthBar': continue
+		if stats[stat.name] == 0:
+			stat.hide()
+		else:
+			var amount = stats[stat.name]
+			var exponent = str(round(amount/10)).length()/3
+			if exponent > 0:
+				stat.get_node("Amount").text = str(round(amount/pow(1000,exponent)))+suffixes[exponent]
+			else:
+				stat.get_node("Amount").text = str(amount)
+			stat.show()
 
 @rpc('authority','call_local')
 func update_world(plate_size_server):
