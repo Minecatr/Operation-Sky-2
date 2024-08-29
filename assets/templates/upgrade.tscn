@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://txl77ewmrcql"]
+
+[ext_resource type="Theme" uid="uid://dhx7dfl8ee5s0" path="res://assets/main_ui.tres" id="1_w6n3b"]
+[ext_resource type="Script" path="res://assets/templates/upgrade.gd" id="2_pxil2"]
+
+[node name="Multi" type="Control"]
+custom_minimum_size = Vector2(96, 64)
+layout_mode = 3
+anchor_right = 0.083
+anchor_bottom = 0.099
+offset_right = -95.616
+offset_bottom = -64.152
+size_flags_horizontal = 3
+theme = ExtResource("1_w6n3b")
+script = ExtResource("2_pxil2")
+
+[node name="Purchase" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 20
+text = "Multi"
+
+[node name="Upgrades" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 14.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 10
+text = "0"
+horizontal_alignment = 1
+
+[node name="Cost" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 10
+text = "⚪3"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[connection signal="mouse_entered" from="Purchase" to="." method="_on_purchase_mouse_entered"]
+[connection signal="mouse_exited" from="Purchase" to="." method="_on_purchase_mouse_exited"]
+[connection signal="pressed" from="Purchase" to="." method="_on_purchase_pressed"]

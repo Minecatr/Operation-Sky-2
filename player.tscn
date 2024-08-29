@@ -1,0 +1,72 @@
+[gd_scene load_steps=9 format=3 uid="uid://bekwpmg3ycj5"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_vj2qu"]
+[ext_resource type="PackedScene" uid="uid://bbbpaxqoqont0" path="res://client.tscn" id="2_auky3"]
+[ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="4_jddnm"]
+[ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="5_bjyrm"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yp7ru"]
+radius = 0.3
+height = 1.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jnj8h"]
+albedo_color = Color(0.152, 0.04, 1, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_elk6w"]
+material = SubResource("StandardMaterial3D_jnj8h")
+radius = 0.3
+height = 1.6
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_28qwm"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = false
+properties/0/replication_mode = 0
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("Camera3D:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:selected_item")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("client")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+script = ExtResource("1_vj2qu")
+client = NodePath("Client")
+
+[node name="Client" parent="." instance=ExtResource("2_auky3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_yp7ru")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_elk6w")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+fov = 87.0
+
+[node name="Interact" type="RayCast3D" parent="Camera3D"]
+target_position = Vector3(0, 0, -2)
+
+[node name="Hotbar" type="Node3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325, -0.4, -0.55)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_28qwm")
+
+[node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("4_jddnm")
+root = NodePath("..")
+state_properties = Array[String]([":velocity", ":position"])
+input_properties = Array[String](["Client:input_dir", "Client:jumping", "Client:sprinting"])
+
+[node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("5_bjyrm")
+root = NodePath("..")
+properties = Array[String]([":global_position"])

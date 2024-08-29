@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://pi2n21wh0qrq"]
+
+[ext_resource type="Script" path="res://items/aug.gd" id="1_dddwt"]
+[ext_resource type="PackedScene" uid="uid://ccvm8hxwsikrp" path="res://assets/models/aug_a3.glb" id="2_f2xko"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dseco"]
+size = Vector3(0.05, 0.3, 0.75)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jv8sm"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:freeze")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath("CollisionShape3D:disabled")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+
+[node name="aug" type="RigidBody3D" groups=["interact", "item"]]
+script = ExtResource("1_dddwt")
+
+[node name="Model" parent="." instance=ExtResource("2_f2xko")]
+transform = Transform3D(-2.18557e-09, 0, 0.05, 0, 0.05, 0, -0.05, 0, -2.18557e-09, 0, -0.1, -0.075)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+shape = SubResource("BoxShape3D_dseco")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_jv8sm")

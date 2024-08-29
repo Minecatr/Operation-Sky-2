@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://2qrkim6a88ak"]
+
+[ext_resource type="Script" path="res://island.gd" id="1_cyq3s"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_byi84"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hh7pf"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_d5yxf"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Island" type="StaticBody3D"]
+script = ExtResource("1_cyq3s")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_byi84")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_hh7pf")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 1.0
+delta_interval = 1.0
+replication_config = SubResource("SceneReplicationConfig_d5yxf")

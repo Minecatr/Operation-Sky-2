@@ -1,0 +1,15 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://dhx7dfl8ee5s0"]
+
+[ext_resource type="FontFile" uid="uid://bv76nkql5kw7h" path="res://assets/font/Magnify-Italic.ttf" id="1_4phcy"]
+
+[resource]
+default_font = ExtResource("1_4phcy")
+default_font_size = 12
+Button/colors/font_outline_color = Color(0, 0, 0, 0.705882)
+Button/constants/outline_size = 6
+Label/colors/font_outline_color = Color(0, 0, 0, 0.705882)
+Label/constants/outline_size = 6
+RichTextLabel/colors/font_outline_color = Color(0, 0, 0, 0.705882)
+RichTextLabel/constants/outline_size = 6
+TabContainer/colors/font_outline_color = Color(0, 0, 0, 0.705882)
+TabContainer/constants/outline_size = 6
