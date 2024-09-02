@@ -18,6 +18,7 @@ script = ExtResource("1_cyq3s")
 shape = SubResource("BoxShape3D_byi84")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+gi_mode = 2
 mesh = SubResource("BoxMesh_hh7pf")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

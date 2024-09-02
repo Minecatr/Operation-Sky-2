@@ -8,6 +8,11 @@ size = Vector3(0.5, 0.5, 0.5)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4lj6w"]
 emission_enabled = true
 emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 1.75
+rim_tint = 0.56
+point_size = 26.3
+distance_fade_min_distance = 10.0
+distance_fade_max_distance = 100.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_n5bb5"]
 material = SubResource("StandardMaterial3D_4lj6w")
@@ -105,6 +110,7 @@ script = ExtResource("1_ftrem")
 shape = SubResource("BoxShape3D_w7sga")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+gi_mode = 2
 mesh = SubResource("BoxMesh_n5bb5")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

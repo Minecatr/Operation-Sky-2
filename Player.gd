@@ -3,7 +3,7 @@ extends CharacterBody3D
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @onready var camera = $Camera3D
-@onready var hotbar = $Camera3D/Hotbar
+@onready var hotbar = $Camera3D/BoneAttachment3D/Hotbar
 @export var client : PlayerInput
 @onready var rollback_synchronizer: RollbackSynchronizer = $RollbackSynchronizer
 
@@ -65,7 +65,10 @@ func select_item():
 
 func _ready():
 	if multiplayer.get_unique_id()==name.to_int():
-		hide()
+		$Walking/Skeleton3D/Beta_Joints.transparency = 1.0
+		$Walking/Skeleton3D/Beta_Surface.transparency = 1.0
+		#hide()
+		
 	await get_tree().process_frame
 	client.set_multiplayer_authority(name.to_int())
 	rollback_synchronizer.process_settings()
@@ -120,10 +123,10 @@ func _force_update_is_on_floor():
 	velocity = old_velocity
 
 func _process(_delta):
-	var horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
-	$Walking/AnimationTree.set("parameters/Walk/ForwardBack/blend_amount", (client.input_dir.normalized().dot(Vector2.UP) + 1.0) / 2.0)
-	$Walking/AnimationTree.set("parameters/Walk/walkblend/blend_amount", horizontal_velocity.length()/(SPRINT if client.sprinting else WALK))
-	$Walking/AnimationTree.set("parameters/Walk/DirectionBlend/blend_amount", global_transform.basis.x.dot(horizontal_velocity.normalized()))
+	var horizontal_velocity := Vector2(velocity.x, velocity.z)
+	#$Walking/AnimationTree.set("parameters/Walk/ForwardBack/blend_amount", (Vector2(velocity.x, -velocity.z).normalized().dot(Vector2.UP) + 1.0) / 2.0)
+	$Walking/AnimationTree.set("parameters/Walk/walkblend/blend_amount", -Vector2(global_basis.z.x, global_basis.z.z).dot(horizontal_velocity)/(SPRINT if client.sprinting else WALK))
+	$Walking/AnimationTree.set("parameters/Walk/DirectionBlend/blend_amount",  Vector2(global_basis.x.x, global_basis.x.z).dot(horizontal_velocity)/(SPRINT if client.sprinting else WALK))
 	var running_amount := clampf(remap(horizontal_velocity.length(), WALK, SPRINT, 0.0, 1.1), 0.0, 1.0)
 	$Walking/AnimationTree.set("parameters/Walk/WalkRun/blend_amount", running_amount)
 	

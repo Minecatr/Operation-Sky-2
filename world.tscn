@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://b123vpsid3sm7"]
+[gd_scene load_steps=38 format=3 uid="uid://b123vpsid3sm7"]
 
 [ext_resource type="Theme" uid="uid://sovx87ibyj4c" path="res://assets/main_menu_theme.tres" id="2_g6l72"]
 [ext_resource type="PackedScene" uid="uid://2qrkim6a88ak" path="res://island.tscn" id="3_77qc4"]
@@ -20,6 +20,7 @@
 [ext_resource type="Script" path="res://addons/markdownlabel/header_formats/h6_format.gd" id="17_ncqv2"]
 [ext_resource type="Texture2D" uid="uid://dvhqp2skpx7o2" path="res://assets/textures/floor_main.svg" id="18_8ioej"]
 [ext_resource type="PackedScene" uid="uid://dyh8jwg5l2jnq" path="res://structures/the_source.tscn" id="20_lnld5"]
+[ext_resource type="VoxelGIData" uid="uid://dhvtcybwyw23q" path="res://world.VoxelGI_data.res" id="21_ru0ex"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_guau5"]
 shader = ExtResource("3_tljlx")
@@ -104,8 +105,8 @@ sky_material = SubResource("ProceduralSkyMaterial_n27i4")
 background_mode = 2
 sky = SubResource("Sky_n410l")
 tonemap_mode = 3
-ssao_enabled = true
-sdfgi_enabled = true
+ssr_max_steps = 128
+ssr_depth_tolerance = 128.0
 glow_enabled = true
 fog_enabled = true
 fog_sky_affect = 0.0
@@ -115,8 +116,8 @@ size = Vector3(4, 0.5, 4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_van5e"]
 albedo_texture = ExtResource("18_8ioej")
-metallic = 0.65
-roughness = 0.5
+metallic_specular = 1.0
+roughness = 0.0
 uv1_triplanar = true
 uv1_world_triplanar = true
 
@@ -520,6 +521,7 @@ shape = SubResource("BoxShape3D_866tl")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Island"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+gi_mode = 2
 mesh = SubResource("BoxMesh_4f0gl")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
@@ -537,6 +539,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_us82r")
+
+[node name="VoxelGI" type="VoxelGI" parent="."]
+subdiv = 2
+size = Vector3(4, 4, 4)
+data = ExtResource("21_ru0ex")
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/Server/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/Server/JoinButton" to="." method="_on_join_button_pressed"]
