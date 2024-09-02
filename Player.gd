@@ -35,6 +35,7 @@ var inventory_slots = 5
 @export var selected_item = -1
 
 @onready var DEBUG_BUILD = OS.is_debug_build()
+var teleporting: bool = false
 
 @rpc("authority", "call_local")
 func inventory_append(item):
@@ -80,6 +81,13 @@ func _ready():
 		)
 
 func _rollback_tick(delta, _tick, _is_fresh):
+	if teleporting:
+		velocity = Vector3.ZERO
+		position = spawn_position
+		teleporting = false
+		$TickInterpolator.teleport()
+		return
+	_force_update_is_on_floor()
 	var acceleration = ACCELERATION if is_on_floor() else AIR_ACCELERATION
 	var speed = SPRINT if client.sprinting else WALK
 	var direction = (transform.basis * Vector3(client.input_dir.x, 0, client.input_dir.y)).normalized()
@@ -95,6 +103,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 		lerp(velocity.x, target_velocity.x, delta * acceleration),
 		velocity.y,
 		lerp(velocity.z, target_velocity.z, delta * acceleration))
+	
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
@@ -102,29 +111,29 @@ func _rollback_tick(delta, _tick, _is_fresh):
 	#rotation.y += mouse_rotation_amount_hack
 	#mouse_rotation_amount_hack = 0
 
+func _force_update_is_on_floor():
+	var old_velocity = velocity
+	velocity = Vector3.ZERO
+	move_and_slide()
+	velocity = old_velocity
+
 func _process(_delta):
 	if multiplayer.is_server():
 		if position.y < -50:
-			change_health.rpc(-1)
+			set_health.rpc_id(1, health-1)
 		if DEBUG_BUILD and Input.is_action_pressed('cheat'):
 			for stat in stats:
 				stats[stat] += 100
 			get_tree().root.get_child(5).update_stats(stats)
 
 @rpc("authority","call_local")
-func change_health(amount):
-	if amount > 0 and health < 100:
-		health = clamp(health+amount,0,100)
-	elif amount < 0:
-		health += amount
-	if health <= 0:
-		health = 100
-		velocity = Vector3.ZERO
-		position = spawn_position
-		$TickInterpolator.teleport()
-	var healthbar = get_tree().root.get_child(5).get_node('CanvasLayer').get_node('HUD').get_node('Quickbar').get_node('HBoxContainer').get_node('HealthBar')
-	healthbar.value = health
-	healthbar.get_node('Label').text = str(health)+'∕100'
+func set_health(new_health):
+	if multiplayer.is_server() and !teleporting:
+		health = clamp(new_health,0,100)
+		if health == 0:
+			teleporting = true
+			health = 100
+	client.modify_healthbar.rpc_id(name.to_int(),health)
 
 @rpc("any_peer", "call_local")
 func interact(interactable):

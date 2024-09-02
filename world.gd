@@ -152,7 +152,8 @@ func update_upgrade_description(upgrade_name):
 	upgrade_desciption_ui.markdown_text = upgrade_description[upgrade_name]
 
 @rpc('any_peer','call_local')
-func upgrade(upgrade_name, player):
+func upgrade(upgrade_name):
+	var player = multiplayer.get_remote_sender_id()
 	if multiplayer.is_server():
 		if get_node(str(player)).stats[upgrade_type[upgrade_name]] >= upgrade_cost[upgrade_name]:
 			get_node(str(player)).stats[upgrade_type[upgrade_name]] -= upgrade_cost[upgrade_name]

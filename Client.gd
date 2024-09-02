@@ -51,8 +51,9 @@ func _process(_delta):
 				if Input.is_action_just_pressed(str(n)):
 					get_parent().hotbar_input.rpc(n)
 
-@rpc('call_local','authority')
+@rpc('call_local','any_peer')
 func hotbar_select(selected_item, type):
+	if multiplayer.get_remote_sender_id() != 1: return
 	for slot in get_tree().root.get_node('World/CanvasLayer/HUD/Hotbar').get_children():
 		slot.modulate = Color(1,1,1,0.5)
 	if selected_item != -1 and get_tree().root.get_node('World/CanvasLayer/HUD/Hotbar').get_child_count() >= selected_item:
@@ -60,6 +61,14 @@ func hotbar_select(selected_item, type):
 	get_tree().root.get_node('World/CanvasLayer/HUD/Crosshair').texture = load('res://assets/crosshairs/crosshair_'+str(type)+'.svg')
 	#else:
 		#get_tree().root.get_node('World/CanvasLayer/HUD/Crosshair').texture = load('res://assets/crosshairs/crosshair_0.svg')
-@rpc('call_local','authority')
+@rpc('call_local','any_peer')
 func modify_hotbar(selected_item, item):
+	if multiplayer.get_remote_sender_id() != 1: return
 	get_tree().root.get_node('World/CanvasLayer/HUD/Hotbar').get_child(selected_item).texture = load('res://assets/item-icons/'+item+'.svg')
+
+@rpc('call_local','any_peer')
+func modify_healthbar(health):
+	if multiplayer.get_remote_sender_id() != 1: return
+	var healthbar = get_tree().root.get_node('World/CanvasLayer/HUD/Quickbar/HBoxContainer/HealthBar')
+	healthbar.value = health
+	healthbar.get_node('Label').text = str(health)+'∕100'
