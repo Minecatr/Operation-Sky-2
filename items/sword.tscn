@@ -30,13 +30,13 @@ properties/5/replication_mode = 2
 script = ExtResource("1_f0560")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.235, 0)
 shape = SubResource("BoxShape3D_dseco")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_jv8sm")
 
 [node name="sword" parent="." instance=ExtResource("2_b8gvy")]
-transform = Transform3D(-8.74228e-09, -0.2, -8.74228e-09, 0, -8.74228e-09, 0.2, -0.2, 8.74228e-09, 3.82137e-16, 0, 0.4, 0)
+transform = Transform3D(-8.74228e-09, -0.2, -8.74228e-09, 0, -8.74228e-09, 0.2, -0.2, 8.74228e-09, 3.82137e-16, 0, 0.235093, 0)
 
 [editable path="sword"]
