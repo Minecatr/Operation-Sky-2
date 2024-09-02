@@ -7,11 +7,11 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var client : PlayerInput
 @onready var rollback_synchronizer: RollbackSynchronizer = $RollbackSynchronizer
 
-const WALK = 3.0
-const SPRINT = 5.0
-const JUMP_VELOCITY = 4.5
-const ACCELERATION = 10.0
-const AIR_ACCELERATION = 2.0
+@export var WALK := 3.0
+@export var SPRINT := 5.0
+@export var JUMP_VELOCITY := 4.5
+@export var ACCELERATION := 10.0
+@export var AIR_ACCELERATION := 2.0
 
 var health = 100
 var spawn_position = Vector3(randf_range(-1.0,1.0),10,randf_range(-1.0,1.0))
@@ -64,6 +64,8 @@ func select_item():
 	client.hotbar_select.rpc_id(name.to_int(),selected_item, 8 if inventory.size() < selected_item or selected_item == -1 else inventory[selected_item-1]._type)
 
 func _ready():
+	if multiplayer.get_unique_id()==name.to_int():
+		hide()
 	await get_tree().process_frame
 	client.set_multiplayer_authority(name.to_int())
 	rollback_synchronizer.process_settings()
@@ -90,7 +92,7 @@ func _rollback_tick(delta, _tick, _is_fresh):
 	_force_update_is_on_floor()
 	var acceleration = ACCELERATION if is_on_floor() else AIR_ACCELERATION
 	var speed = SPRINT if client.sprinting else WALK
-	var direction = (transform.basis * Vector3(client.input_dir.x, 0, client.input_dir.y)).normalized()
+	var direction = (transform.basis * Vector3(client.input_dir.x, 0, client.input_dir.y).normalized()).normalized()
 	var target_velocity = direction * speed
 	
 	#mouse_rotation_amount_hack = 0
@@ -118,6 +120,19 @@ func _force_update_is_on_floor():
 	velocity = old_velocity
 
 func _process(_delta):
+	var horizontal_velocity := Vector3(velocity.x, 0.0, velocity.z)
+	$Walking/AnimationTree.set("parameters/Walk/ForwardBack/blend_amount", (client.input_dir.normalized().dot(Vector2.UP) + 1.0) / 2.0)
+	$Walking/AnimationTree.set("parameters/Walk/walkblend/blend_amount", horizontal_velocity.length()/(SPRINT if client.sprinting else WALK))
+	$Walking/AnimationTree.set("parameters/Walk/DirectionBlend/blend_amount", global_transform.basis.x.dot(horizontal_velocity.normalized()))
+	var running_amount := clampf(remap(horizontal_velocity.length(), WALK, SPRINT, 0.0, 1.1), 0.0, 1.0)
+	$Walking/AnimationTree.set("parameters/Walk/WalkRun/blend_amount", running_amount)
+	
+	#if Vector2(velocity.x, velocity.z).dot(Vector2(transform.basis.z.x, transform.basis.z.z)) <= -0.25:
+		#var blend_node: AnimationNodeBlend2 = $Walking/AnimationTree.tree_root.get_node("Walk").get_node("walkblend")
+		#$Walking/AnimationTree.set("parameters/Walk/walkblend/blend_amount", 0.5)
+		#$Walking/AnimationPlayer.play("mixamo_com")
+	#else:
+		#$Walking/AnimationPlayer.stop()
 	if multiplayer.is_server():
 		if position.y < -50:
 			set_health.rpc_id(1, health-1)
