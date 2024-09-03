@@ -35,6 +35,21 @@ properties/2/replication_mode = 2
 properties/3/path = NodePath(".:selected_item")
 properties/3/spawn = true
 properties/3/replication_mode = 2
+properties/4/path = NodePath(".:WALK")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:SPRINT")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath(".:JUMP_VELOCITY")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:ACCELERATION")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+properties/8/path = NodePath(".:AIR_ACCELERATION")
+properties/8/spawn = true
+properties/8/replication_mode = 1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rxqmp"]
 resource_name = "Beta_HighLimbsGeoSG3"
@@ -1339,6 +1354,7 @@ visible = false
 mesh = SubResource("CapsuleMesh_elk6w")
 
 [node name="Client" parent="." instance=ExtResource("2_auky3")]
+MOUSE_SENSITIVITY = 100.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_yp7ru")

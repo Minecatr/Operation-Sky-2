@@ -9,7 +9,9 @@ var no_selected_item: bool = false
 @onready var parent = get_parent()
 @onready var camera = $'../Camera3D'
 
-const MOUSE_SENSITIVITY = 0.0025
+@export_range(0.0, 1100.0) var MOUSE_SENSITIVITY := 0.1
+const MOUSE_SENSITIVITY_MIN := 0.01
+const MOUSE_SENSITIVITY_MAX := 1.0
 
 var pause : bool = false
 var inventory : bool = false
@@ -21,6 +23,7 @@ func _ready():
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _unhandled_input(event):
+	var mouse_sens := remap(MOUSE_SENSITIVITY, 0.0, 1100.0, MOUSE_SENSITIVITY_MIN, MOUSE_SENSITIVITY_MAX)
 	if multiplayer.get_unique_id()==parent.name.to_int():
 		if Input.is_action_just_pressed('pause') and !inventory:
 			pause = !pause
@@ -34,7 +37,8 @@ func _unhandled_input(event):
 			if event is InputEventMouseMotion:
 				#parent.rotation.y = wrapf(camera_rot.y - event.relative.x * MOUSE_SENSITIVITY, -PI, PI)
 				#camera.rotation.x = clamp(camera_rot.x - event.relative.y * MOUSE_SENSITIVITY, -PI/2, PI/2)
-				parent.recieve_camera.rpc(-event.relative.x * MOUSE_SENSITIVITY,-event.relative.y * MOUSE_SENSITIVITY)
+				#event.velocity
+				parent.recieve_camera.rpc(-deg_to_rad(event.screen_relative.x * mouse_sens),-deg_to_rad(event.screen_relative.y * mouse_sens))
 
 #func _gather():
 func _process(_delta):
