@@ -1,5 +1,7 @@
 extends Node
 
+var settings := false
+
 @onready var main_menu = $CanvasLayer/MainMenu
 @onready var address_entry = $CanvasLayer/MainMenu/VBoxContainer/Server/AddressEntry
 @onready var upnp_toggle = $CanvasLayer/MainMenu/VBoxContainer/UpnpToggle
@@ -83,6 +85,10 @@ var enet_peer = ENetMultiplayerPeer.new()
 var reparent_queue : Array
 
 func _unhandled_input(_event):
+	if Input.is_action_just_pressed("pause") and settings:
+		settings = false
+		$CanvasLayer/Settings.hide()
+		$CanvasLayer/MainMenu.show()
 	if Input.is_action_just_pressed("quit"):
 		get_tree().quit()
 	if Input.is_action_just_pressed("fullscreen"):
@@ -109,7 +115,7 @@ func _on_join_button_pressed():
 	multiplayer.multiplayer_peer = enet_peer
 
 func add_player(peer_id):
-	var player = PLAYER.instantiate()
+	var player := PLAYER.instantiate()
 	player.name = str(peer_id)
 	add_child(player)
 	update_upgrades.rpc_id(peer_id,upgrade_value,upgrade_cost,upgrade_type)
@@ -117,7 +123,7 @@ func add_player(peer_id):
 	update_world.rpc_id(peer_id,upgrade_value['Plate Size'])
 
 func remove_player(peer_id):
-	var player = get_node_or_null(str(peer_id))
+	var player := get_node_or_null(str(peer_id))
 	if player:
 		player.queue_free()
 
@@ -203,3 +209,9 @@ func update_stats(stats):
 func update_world(plate_size_server):
 	$Island/MeshInstance3D.mesh.size = Vector3(4+(2*plate_size_server),0.5,4+(2*plate_size_server))
 	$Island/CollisionShape3D.shape.size = Vector3(4+(2*plate_size_server),0.5,4+(2*plate_size_server))
+
+
+func _on_settings_button_pressed() -> void:
+	settings = true
+	$CanvasLayer/MainMenu.hide()
+	$CanvasLayer/Settings.show()

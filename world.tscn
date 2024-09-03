@@ -116,13 +116,12 @@ size = Vector3(4, 0.5, 4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_van5e"]
 albedo_texture = ExtResource("18_8ioej")
-metallic_specular = 1.0
-roughness = 0.0
+metallic = 0.65
+roughness = 0.5
 uv1_triplanar = true
 uv1_world_triplanar = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_4f0gl"]
-material = SubResource("StandardMaterial3D_van5e")
 size = Vector3(4, 0.5, 4)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_us82r"]
@@ -521,7 +520,7 @@ shape = SubResource("BoxShape3D_866tl")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Island"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
-gi_mode = 2
+material_override = SubResource("StandardMaterial3D_van5e")
 mesh = SubResource("BoxMesh_4f0gl")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
@@ -542,9 +541,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 replication_config = SubResource("SceneReplicationConfig_us82r")
 
 [node name="VoxelGI" type="VoxelGI" parent="."]
-subdiv = 2
 size = Vector3(4, 4, 4)
 data = ExtResource("21_vwnxt")
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/Server/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/Server/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]

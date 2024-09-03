@@ -56,13 +56,13 @@ func _process(_delta: float) -> void:
 			var shoot_select := (Input.is_action_just_pressed('shoot') and no_selected_item and !inventory)
 			var collider: Node3D = $'../Camera3D/Interact'.get_collider()
 			if (Input.is_action_just_pressed('interact') or shoot_select) and collider and collider.is_in_group('interact'):
-				parent.interact.rpc_id(1,$'../Camera3D/Interact'.get_collider().get_path())
+				parent.interact.rpc_id(1,collider.get_path())
 			for n in range(1,6): # Hotbar
 				if Input.is_action_just_pressed(str(n)):
 					parent.hotbar_input.rpc(n)
 
 @rpc('call_local','any_peer')
-func hotbar_select(selected_item: int, type: float):
+func hotbar_select(selected_item: int, type: float) -> void:
 	if multiplayer.get_remote_sender_id() != 1: return
 	var hotbar := root.get_node('World/CanvasLayer/HUD/Hotbar')
 	for slot in hotbar.get_children():
@@ -73,12 +73,12 @@ func hotbar_select(selected_item: int, type: float):
 	#else:
 		#get_tree().root.get_node('World/CanvasLayer/HUD/Crosshair').texture = load('res://assets/crosshairs/crosshair_0.svg')
 @rpc('call_local','any_peer')
-func modify_hotbar(selected_item: int, item: String):
+func modify_hotbar(selected_item: int, item: String) -> void:
 	if multiplayer.get_remote_sender_id() != 1: return
 	get_tree().root.get_node('World/CanvasLayer/HUD/Hotbar').get_child(selected_item).texture = load('res://assets/item-icons/'+item+'.svg')
 
 @rpc('call_local','any_peer')
-func modify_healthbar(health: int):
+func modify_healthbar(health: int) -> void:
 	if multiplayer.get_remote_sender_id() != 1: return
 	var healthbar := get_tree().root.get_node('World/CanvasLayer/HUD/Quickbar/HBoxContainer/HealthBar')
 	healthbar.value = health

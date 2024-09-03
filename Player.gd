@@ -123,6 +123,8 @@ func _force_update_is_on_floor() -> void:
 	velocity = old_velocity
 
 func _process(_delta: float) -> void:
+	root = get_tree().root
+	
 	var horizontal_velocity := Vector2(velocity.x, velocity.z)
 	var speed := (SPRINT if client.sprinting else WALK)
 	$Walking/AnimationTree.set("parameters/Walk/walkblend/blend_amount", -Vector2(global_basis.z.x, global_basis.z.z).dot(horizontal_velocity)/speed)
