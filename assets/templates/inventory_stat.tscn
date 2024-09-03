@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://ww7rrpr23cmm"]
+[gd_scene load_steps=6 format=3 uid="uid://ww7rrpr23cmm"]
 
 [ext_resource type="Texture2D" uid="uid://j6mf77n85ela" path="res://assets/ui_progress_back.svg" id="1_3x656"]
 [ext_resource type="Theme" uid="uid://dhx7dfl8ee5s0" path="res://assets/main_ui.tres" id="1_qd4gn"]
+[ext_resource type="Script" path="res://assets/templates/inventory_stat.gd" id="2_y7dbh"]
 [ext_resource type="Texture2D" uid="uid://b06mga5yc2omg" path="res://assets/ui_progress.svg" id="3_nx32h"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vc6x4"]
@@ -16,6 +17,7 @@ offset_bottom = -0.152008
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("1_qd4gn")
+script = ExtResource("2_y7dbh")
 
 [node name="Color" type="NinePatchRect" parent="."]
 layout_mode = 1
@@ -93,3 +95,5 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_vc6x4")
 text = "-"
 flat = true
 clip_text = true
+
+[connection signal="pressed" from="Drop" to="." method="_on_drop_pressed"]

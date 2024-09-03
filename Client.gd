@@ -8,6 +8,7 @@ var no_selected_item: bool = false
 
 @onready var parent = get_parent()
 @onready var camera = $'../Camera3D'
+@onready var interaction_raycast = $'../Camera3D/Interact'
 
 @export_range(0.0, 1100.0) var MOUSE_SENSITIVITY := 0.1
 const MOUSE_SENSITIVITY_MIN := 0.01
@@ -49,8 +50,9 @@ func _process(_delta):
 			input_dir = Input.get_vector('left','right','forward','backward')
 			jumping = Input.is_action_pressed('jump') 
 			sprinting = Input.is_action_pressed('sprint')
-			if (Input.is_action_just_pressed('interact') or (Input.is_action_just_pressed('shoot') and no_selected_item and !inventory)) and $'../Camera3D/Interact'.get_collider() and $'../Camera3D/Interact'.get_collider().is_in_group('interact'):
-				get_parent().interact.rpc_id(1,$'../Camera3D/Interact'.get_collider().get_path())
+			var interaction_raycast_collider = interaction_raycast.get_collider()
+			if (Input.is_action_just_pressed('interact') or (Input.is_action_just_pressed('shoot') and no_selected_item and !inventory)) and interaction_raycast_collider and interaction_raycast_collider.is_in_group('interact'):
+				get_parent().interact.rpc_id(1,interaction_raycast_collider.get_path())
 			for n in range(1,6): # Hotbar
 				if Input.is_action_just_pressed(str(n)):
 					get_parent().hotbar_input.rpc(n)

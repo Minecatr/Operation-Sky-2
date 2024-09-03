@@ -115,8 +115,8 @@ size = Vector3(4, 0.5, 4)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_van5e"]
 albedo_texture = ExtResource("18_8ioej")
-metallic_specular = 1.0
-roughness = 0.0
+metallic = 0.65
+roughness = 0.5
 uv1_triplanar = true
 uv1_world_triplanar = true
 
@@ -524,7 +524,7 @@ gi_mode = 2
 mesh = SubResource("BoxMesh_4f0gl")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://player.tscn")
+_spawnable_scenes = PackedStringArray("res://player.tscn", "res://scenes/dropped_stat.tscn")
 spawn_path = NodePath("..")
 
 [node name="Island2" parent="." instance=ExtResource("3_77qc4")]
