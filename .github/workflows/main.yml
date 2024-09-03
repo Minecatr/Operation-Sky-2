@@ -2,9 +2,8 @@ name: "godot-ci export"
 on: push
 
 env:
-  GODOT_VERSION: 4.3.0
+  GODOT_VERSION: 4.3
   EXPORT_NAME: Operation-Sky-2
-  PROJECT_PATH: Operation-Sky-2
 
 jobs:
   export-windows:
