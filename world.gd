@@ -180,9 +180,9 @@ func update_stats(stats):
 			stat.hide()
 		else:
 			var amount = stats[stat.name]
-			var exponent = str(round(amount/10)).length()/3
+			var exponent = str(floor(amount/10)).length()/3
 			if exponent > 0:
-				stat.get_node("Amount").text = str(round(amount/pow(1000,exponent)))+suffixes[exponent]
+				stat.get_node("Amount").text = str(floor(amount/pow(1000,exponent)))+suffixes[exponent]
 			else:
 				stat.get_node("Amount").text = str(amount)
 			stat.show()

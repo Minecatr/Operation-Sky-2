@@ -65,8 +65,7 @@ func select_item():
 
 func _ready():
 	if multiplayer.get_unique_id()==name.to_int():
-		$Walking/Skeleton3D/Beta_Joints.transparency = 1.0
-		$Walking/Skeleton3D/Beta_Surface.transparency = 1.0
+		$Walking/Skeleton3D/Ch20.transparency = 1.0
 		#hide()
 		
 	await get_tree().process_frame
