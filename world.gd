@@ -18,7 +18,7 @@ extends Node
 
 @onready var upgrade_desciption_ui = $CanvasLayer/HUD/Inventory/Upgrades/MarginContainer/RichTextLabel
 
-@export var stats_color = {
+@export var stats_color := {
 	'Points': Color(1,1,1),
 	'Wood': Color(0.67,0.33,0.13),
 	'Stone': Color(0.5,0.5,0.5),
@@ -30,7 +30,7 @@ extends Node
 	'Coal': Color(0.25,0.25,0.25),
 	'Glass': Color(0.75,1,1)
 }
-@export var stats_emoji = {
+@export var stats_emoji := {
 	'Points': '⚪',
 	'Wood': '🪵',
 	'Stone': '🪨',
@@ -42,22 +42,34 @@ extends Node
 	'Coal': '⚫',
 	'Glass': '🪟'
 }
-@export var upgrade_cost = {
+@export var stats_material := {
+	'Points': '',
+	'Wood': '',
+	'Stone': Color(0.5,0.5,0.5),
+	'Food': Color(1,0.13,0.5),
+	'Gold': Color(1,0.75,0.25),
+	'Sand': Color(1,0.88,0.63),
+	'Cactus': Color(0.25,0.5,0.19),
+	'Dirt': Color(0.64,0.41,0.32),
+	'Coal': Color(0.25,0.25,0.25),
+	'Glass': Color(0.75,1,1)
+}
+@export var upgrade_cost := {
 	'Multi': 3,
 	'Speed': 1,
 	'Plate Size': 1
 }
-@export var upgrade_value = {
+@export var upgrade_value := {
 	'Multi': 0,
 	'Speed': 0,
 	'Plate Size': 0
 }
-@export var upgrade_type = {
+@export var upgrade_type := {
 	'Multi': 'Points',
 	'Speed': 'Points',
 	'Plate Size': 'Points'
 }
-@export var upgrade_description = {
+@export var upgrade_description := {
 	'default': '## Description\nShows the\ndescription of\nthe upgrade you\nare hovering over.',
 	'Multi': '## Description\nMultiplies the\nnumber of\npoints you get\nby clicking on\nthe source.',
 	'Speed': '## Description\nDecreases the\ntime it\ntakes for the\nsource to\nregenerate.',

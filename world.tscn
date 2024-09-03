@@ -19,7 +19,7 @@
 [ext_resource type="Script" path="res://addons/markdownlabel/header_formats/h5_format.gd" id="16_c0hnu"]
 [ext_resource type="Script" path="res://addons/markdownlabel/header_formats/h6_format.gd" id="17_ncqv2"]
 [ext_resource type="Texture2D" uid="uid://dvhqp2skpx7o2" path="res://assets/textures/floor_main.svg" id="18_8ioej"]
-[ext_resource type="PackedScene" uid="uid://dyh8jwg5l2jnq" path="res://structures/the_source.tscn" id="20_lnld5"]
+[ext_resource type="PackedScene" uid="uid://dyh8jwg5l2jnq" path="res://scenes/the_source.tscn" id="20_lnld5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_guau5"]
 shader = ExtResource("3_tljlx")

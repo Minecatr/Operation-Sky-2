@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=3 uid="uid://do3ll5ll74dkv"]
+
+[ext_resource type="Material" uid="uid://loh5hwwc2c3c" path="res://assets/materials/default_item.tres" id="1_g6c35"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_b8ah5"]
+radius = 0.125
+
+[sub_resource type="SphereMesh" id="SphereMesh_m6vo2"]
+material = ExtResource("1_g6c35")
+radius = 0.125
+height = 0.25
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qhj84"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:freeze")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath("CollisionShape3D:disabled")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+
+[node name="Points" type="RigidBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_b8ah5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_m6vo2")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_qhj84")
