@@ -189,6 +189,10 @@ cheat={
 ]
 }
 
+[physics]
+
+3d/physics_engine="JoltPhysics3D"
+
 [rendering]
 
 lights_and_shadows/directional_shadow/size=8192

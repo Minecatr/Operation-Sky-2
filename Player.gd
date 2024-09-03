@@ -15,6 +15,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @onready var root := get_tree().root
 @onready var player_id := name.to_int()
+@onready var is_server := multiplayer.is_server()
 
 var health := 100
 var spawn_position := Vector3(randf_range(-1.0,1.0),10,randf_range(-1.0,1.0))
@@ -72,7 +73,7 @@ func _ready():
 	client.set_multiplayer_authority(player_id)
 	rollback_synchronizer.process_settings()
 	
-	if multiplayer.is_server():
+	if is_server:
 		inventory_append.rpc(Item.serialize(Item.new('sword',[],2)))
 		inventory_append.rpc(Item.serialize(Item.new('hammer',[],4)))
 		inventory_append.rpc(Item.serialize(Item.new('wrench',[],7)))
@@ -116,7 +117,7 @@ func _rollback_tick(delta: float, _tick: int, _is_fresh: bool) -> void:
 	#mouse_rotation_amount_hack = 0
 
 func _force_update_is_on_floor() -> void:
-	var old_velocity = velocity
+	var old_velocity := velocity
 	velocity = Vector3.ZERO
 	move_and_slide()
 	velocity = old_velocity
@@ -135,7 +136,7 @@ func _process(_delta: float) -> void:
 		#$Walking/AnimationPlayer.play("mixamo_com")
 	#else:
 		#$Walking/AnimationPlayer.stop()
-	if multiplayer.is_server():
+	if is_server:
 		if position.y < -50:
 			set_health.rpc_id(1, health-1)
 		if DEBUG_BUILD and Input.is_action_pressed('cheat'):
@@ -145,7 +146,7 @@ func _process(_delta: float) -> void:
 
 @rpc("authority","call_local")
 func set_health(new_health):
-	if multiplayer.is_server() and !teleporting:
+	if is_server and !teleporting:
 		health = clamp(new_health,0,100)
 		if health == 0:
 			teleporting = true
@@ -154,7 +155,7 @@ func set_health(new_health):
 
 @rpc("any_peer", "call_local")
 func interact(interactable):
-	if multiplayer.is_server():
+	if is_server:
 		var item_object := root.get_child(0).get_node(interactable)
 		if item_object:
 			var in_group := item_object.is_in_group('item')

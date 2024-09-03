@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://b123vpsid3sm7"]
+[gd_scene load_steps=38 format=3 uid="uid://b123vpsid3sm7"]
 
 [ext_resource type="Theme" uid="uid://sovx87ibyj4c" path="res://assets/main_menu_theme.tres" id="2_g6l72"]
 [ext_resource type="PackedScene" uid="uid://2qrkim6a88ak" path="res://island.tscn" id="3_77qc4"]
@@ -20,6 +20,7 @@
 [ext_resource type="Script" path="res://addons/markdownlabel/header_formats/h6_format.gd" id="17_ncqv2"]
 [ext_resource type="Texture2D" uid="uid://dvhqp2skpx7o2" path="res://assets/textures/floor_main.svg" id="18_8ioej"]
 [ext_resource type="PackedScene" uid="uid://dyh8jwg5l2jnq" path="res://scenes/the_source.tscn" id="20_lnld5"]
+[ext_resource type="VoxelGIData" uid="uid://dhvtcybwyw23q" path="res://world.VoxelGI_data.res" id="21_vwnxt"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_guau5"]
 shader = ExtResource("3_tljlx")
@@ -528,6 +529,7 @@ _spawnable_scenes = PackedStringArray("res://player.tscn")
 spawn_path = NodePath("..")
 
 [node name="Island2" parent="." instance=ExtResource("3_77qc4")]
+visible = false
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 10, 10, 10)
@@ -538,6 +540,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_us82r")
+
+[node name="VoxelGI" type="VoxelGI" parent="."]
+subdiv = 2
+size = Vector3(4, 4, 4)
+data = ExtResource("21_vwnxt")
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/Server/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/VBoxContainer/Server/JoinButton" to="." method="_on_join_button_pressed"]
