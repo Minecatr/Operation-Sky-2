@@ -1,12 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://do3ll5ll74dkv"]
-
-[ext_resource type="Material" uid="uid://loh5hwwc2c3c" path="res://assets/materials/default_item.tres" id="1_g6c35"]
+[gd_scene load_steps=4 format=3 uid="uid://do3ll5ll74dkv"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_b8ah5"]
 radius = 0.125
 
-[sub_resource type="SphereMesh" id="SphereMesh_m6vo2"]
-material = ExtResource("1_g6c35")
+[sub_resource type="SphereMesh" id="SphereMesh_uhws3"]
 radius = 0.125
 height = 0.25
 
@@ -36,7 +33,7 @@ properties/5/replication_mode = 2
 shape = SubResource("SphereShape3D_b8ah5")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_m6vo2")
+mesh = SubResource("SphereMesh_uhws3")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_qhj84")

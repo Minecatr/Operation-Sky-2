@@ -20,6 +20,8 @@ var settings := false
 
 @onready var upgrade_desciption_ui = $CanvasLayer/HUD/Inventory/Upgrades/MarginContainer/RichTextLabel
 
+@onready var dropped_stat = preload("res://scenes/dropped_stat.tscn")
+
 @export var stats_color := {
 	'Points': Color(1,1,1),
 	'Wood': Color(0.67,0.33,0.13),
@@ -45,16 +47,16 @@ var settings := false
 	'Glass': '🪟'
 }
 @export var stats_material := {
-	'Points': '',
-	'Wood': '',
-	'Stone': Color(0.5,0.5,0.5),
-	'Food': Color(1,0.13,0.5),
-	'Gold': Color(1,0.75,0.25),
-	'Sand': Color(1,0.88,0.63),
-	'Cactus': Color(0.25,0.5,0.19),
-	'Dirt': Color(0.64,0.41,0.32),
-	'Coal': Color(0.25,0.25,0.25),
-	'Glass': Color(0.75,1,1)
+	'Points': preload("res://assets/materials/glowing_item.tres"),
+	'Wood': preload("res://assets/materials/default_item.tres"),
+	'Stone': preload("res://assets/materials/default_item.tres"),
+	'Food': preload("res://assets/materials/default_item.tres"),
+	'Gold': preload("res://assets/materials/metallic_item.tres"),
+	'Sand': preload("res://assets/materials/default_item.tres"),
+	'Cactus': preload("res://assets/materials/default_item.tres"),
+	'Dirt': preload("res://assets/materials/default_item.tres"),
+	'Coal': preload("res://assets/materials/default_item.tres"),
+	'Glass': preload("res://assets/materials/transparent_item.tres")
 }
 @export var upgrade_cost := {
 	'Multi': 3,
@@ -181,6 +183,16 @@ func upgrade(upgrade_name):
 			update_stats.rpc_id(player,get_node(str(player)).stats)
 			if upgrade_name == 'Plate Size':
 				update_world.rpc(upgrade_value['Plate Size'])
+@rpc('any_peer','call_local')
+func drop_stat(stat_name):
+	var player = multiplayer.get_remote_sender_id()
+	if multiplayer.is_server():
+		if get_node(str(player)).stats[stat_name] > 0:
+			var stat_instance = dropped_stat.instantiate()
+			stat_instance.name = stat_name
+			stat_instance.get_node('MeshInstance3D').material_override = stats_material[stat_name]
+			stat_instance.position = get_node(str(player)).position + Vector3(0,0.5,1.5).rotated(Vector3.UP, get_node(str(player)).rotation.y)
+			add_child(stat_instance)
 
 @rpc('authority','call_local')
 func update_upgrades(upgrade_value_server,upgrade_cost_server,upgrade_type_server):
