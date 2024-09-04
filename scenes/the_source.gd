@@ -1,12 +1,12 @@
 extends StaticBody3D
 
-@onready var timer = $Timer
-@onready var animation_player = $AnimationPlayer
+@onready var timer := $Timer
+@onready var animation_player := $AnimationPlayer
 
-var timer_active = false
+var timer_active := false
 
 @rpc('authority','call_local')
-func interact(player):
+func interact(player: int) -> void:
 	if !timer_active:
 		if multiplayer.is_server():
 			timer.wait_time = 10.0/(float(get_parent().upgrade_value['Speed'])+2.0)
