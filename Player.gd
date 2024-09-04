@@ -36,9 +36,13 @@ var inventory_slots = 5
 
 @onready var DEBUG_BUILD = OS.is_debug_build()
 var teleporting: bool = false
+var root: Node = self
+
+func update_root():
+	root = get_tree().root.get_node('World')
 
 @rpc("authority", "call_local")
-func inventory_append(item):
+func inventory_append(item) -> void:
 	item = item if item is Item else Item.deserialize(item)
 	inventory.append(item)
 	var item_instance = load('res://items/'+item._name+'.tscn').instantiate()
@@ -52,7 +56,7 @@ func inventory_append(item):
 	client.modify_hotbar.rpc_id(name.to_int(),item_instance.get_index(),item._name)
 	select_item()
 
-func select_item():
+func select_item() -> void:
 	for item in hotbar.get_children():
 		item.hide()
 	if selected_item != -1 and hotbar.get_child_count() >= selected_item:
@@ -63,7 +67,8 @@ func select_item():
 	#if 1==name.to_int():
 	client.hotbar_select.rpc_id(name.to_int(),selected_item, 8 if inventory.size() < selected_item or selected_item == -1 else inventory[selected_item-1]._type)
 
-func _ready():
+func _ready() -> void:
+	update_root()
 	if multiplayer.get_unique_id()==name.to_int():
 		$Walking/Skeleton3D/Ch20.transparency = 1.0
 		#hide()
@@ -115,13 +120,13 @@ func _rollback_tick(delta, _tick, _is_fresh):
 	#rotation.y += mouse_rotation_amount_hack
 	#mouse_rotation_amount_hack = 0
 
-func _force_update_is_on_floor():
+func _force_update_is_on_floor() -> void:
 	var old_velocity = velocity
 	velocity = Vector3.ZERO
 	move_and_slide()
 	velocity = old_velocity
 
-func _process(_delta):
+func _process(_delta) -> void:
 	var horizontal_velocity := Vector2(velocity.x, velocity.z)
 	#$Walking/AnimationTree.set("parameters/Walk/ForwardBack/blend_amount", (Vector2(velocity.x, -velocity.z).normalized().dot(Vector2.UP) + 1.0) / 2.0)
 	$Walking/AnimationTree.set("parameters/Walk/walkblend/blend_amount", -Vector2(global_basis.z.x, global_basis.z.z).dot(horizontal_velocity)/(SPRINT if client.sprinting else WALK))
@@ -141,10 +146,10 @@ func _process(_delta):
 		if DEBUG_BUILD and Input.is_action_pressed('cheat'):
 			for stat in stats:
 				stats[stat] += 100
-			get_tree().root.get_child(5).update_stats(stats)
+			root.update_stats(stats)
 
 @rpc("authority","call_local")
-func set_health(new_health):
+func set_health(new_health) -> void:
 	if multiplayer.is_server() and !teleporting:
 		health = clamp(new_health,0,100)
 		if health == 0:
@@ -153,10 +158,10 @@ func set_health(new_health):
 	client.modify_healthbar.rpc_id(name.to_int(),health)
 
 @rpc("any_peer", "call_local")
-func interact(interactable):
+func interact(interactable) -> void:
 	if multiplayer.is_server():
-		if get_tree().root.get_child(0).get_node(interactable):
-			var item_object = get_tree().root.get_child(0).get_node(interactable)
+		if root.get_node(interactable):
+			var item_object = root.get_node(interactable)
 			if item_object.is_in_group('item') and inventory.size() < inventory_slots and position.distance_to(item_object.position) <= 2:
 				var item = Item.serialize(item_object.item)
 				item_interact.rpc(item, interactable)
@@ -164,13 +169,13 @@ func interact(interactable):
 				item_object.interact.rpc(name.to_int())
 
 @rpc("authority", "call_local")
-func item_interact(item, item_object_path):
-	var item_object = get_tree().root.get_child(0).get_node(item_object_path)
+func item_interact(item, item_object_path) -> void:
+	var item_object = root.get_node(item_object_path)
 	item_object.queue_free()
 	inventory_append(item)
 
 @rpc("any_peer", "call_local")
-func hotbar_input(input):
+func hotbar_input(input) -> void:
 	if selected_item != input:
 		selected_item = clamp(input, 1, inventory_slots)
 		select_item()
@@ -179,7 +184,7 @@ func hotbar_input(input):
 		select_item()
 
 @rpc("any_peer", "call_local")
-func recieve_camera(y,x):
+func recieve_camera(y,x) -> void:
 	rotate_y(y)
 	#mouse_rotation_amount_hack = y
 	camera.rotate_x(x)
