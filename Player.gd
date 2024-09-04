@@ -123,8 +123,6 @@ func _force_update_is_on_floor() -> void:
 	velocity = old_velocity
 
 func _process(_delta: float) -> void:
-	root = get_tree().root
-	
 	var horizontal_velocity := Vector2(velocity.x, velocity.z)
 	var speed := (SPRINT if client.sprinting else WALK)
 	$Walking/AnimationTree.set("parameters/Walk/walkblend/blend_amount", -Vector2(global_basis.z.x, global_basis.z.z).dot(horizontal_velocity)/speed)
@@ -132,19 +130,13 @@ func _process(_delta: float) -> void:
 	var running_amount := clampf(remap(horizontal_velocity.length(), WALK, SPRINT, 0.0, 1.1), 0.0, 1.0)
 	$Walking/AnimationTree.set("parameters/Walk/WalkRun/blend_amount", running_amount)
 	
-	#if Vector2(velocity.x, velocity.z).dot(Vector2(transform.basis.z.x, transform.basis.z.z)) <= -0.25:
-		#var blend_node: AnimationNodeBlend2 = $Walking/AnimationTree.tree_root.get_node("Walk").get_node("walkblend")
-		#$Walking/AnimationTree.set("parameters/Walk/walkblend/blend_amount", 0.5)
-		#$Walking/AnimationPlayer.play("mixamo_com")
-	#else:
-		#$Walking/AnimationPlayer.stop()
 	if is_server:
 		if position.y < -50:
 			set_health.rpc_id(1, health-1)
 		if DEBUG_BUILD and Input.is_action_pressed('cheat'):
 			for stat in stats:
 				stats[stat] += 100
-			root.get_child(5).update_stats(stats)
+			root.get_node('World').update_stats(stats)
 
 @rpc("authority","call_local")
 func set_health(new_health):
@@ -158,7 +150,7 @@ func set_health(new_health):
 @rpc("any_peer", "call_local")
 func interact(interactable):
 	if is_server:
-		var item_object := root.get_child(0).get_node(interactable)
+		var item_object := root.get_node('World').get_node(interactable)
 		if item_object:
 			var in_group := item_object.is_in_group('item')
 			if in_group and inventory.size() < inventory_slots and position.distance_to(item_object.position) <= 2.0:
@@ -169,7 +161,7 @@ func interact(interactable):
 
 @rpc("authority", "call_local")
 func item_interact(item: Variant, item_object_path: String) -> void:
-	var item_object := root.get_child(0).get_node(item_object_path)
+	var item_object := root.get_node('World').get_node(item_object_path)
 	item_object.queue_free()
 	inventory_append(item)
 
